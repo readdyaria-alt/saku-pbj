@@ -1,6 +1,6 @@
 // Service worker: menyimpan semua file agar aplikasi bisa dibuka offline.
 // Naikkan VERSION setiap kali isi aplikasi diperbarui.
-const VERSION = 'saku-pbj-v7';
+const VERSION = 'saku-pbj-v8';
 const FILES = [
   './', './index.html', './manifest.webmanifest', './logo.png',
   './pam-icon-192.png', './pam-icon-512.png', './pam-icon-maskable-512.png',

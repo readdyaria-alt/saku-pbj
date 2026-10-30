@@ -235,6 +235,15 @@ input[type=range]{width:100%}
 .crel .ci{background:var(--soft);border-radius:10px;padding:8px 10px;margin-top:6px;color:var(--ink)}
 .crel .ci .csrc{border:0;padding-top:2px;margin-top:4px}
 .ctool{display:inline-block;margin-top:10px;font-size:13px;font-weight:700;background:var(--softg);color:var(--navy);padding:6px 10px;border-radius:9px}
+.cai{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:800;letter-spacing:.05em;color:#7a4dd8;background:#f1ebff;border-radius:6px;padding:2px 7px;margin-bottom:6px}
+.cmd p{margin:0 0 6px}.cmd ul{margin:2px 0 6px 0;padding-left:18px}.cmd li{margin-bottom:3px}
+.cmd sup a{font-size:10.5px;font-weight:800;color:var(--blue);background:var(--soft);border-radius:4px;padding:0 4px;margin-left:1px}
+.csl{margin-top:8px;padding-top:7px;border-top:1px dashed var(--line)}
+.csl a{display:block;font-size:12.5px;font-weight:700;color:var(--navy);margin-top:3px}
+.csl a i{font-style:normal;font-size:10.5px;font-weight:800;color:var(--blue);background:var(--soft);border-radius:4px;padding:0 4px;margin-right:5px}
+.ctyping{color:var(--muted);font-style:italic}
+.ctyping::after{content:"";display:inline-block;width:1.2em;animation:dots 1.2s steps(4) infinite;overflow:hidden;vertical-align:bottom}
+@keyframes dots{0%{content:""}25%{content:"."}50%{content:".."}75%{content:"..."}}
 .cctx{font-size:12px;font-weight:800;letter-spacing:.04em;color:var(--blue);margin-bottom:3px}
 .clist{margin:6px 0 0 16px}.clist li{margin-bottom:4px}
 .ctips{margin:6px 0 0 16px;font-size:13.5px}
@@ -615,12 +624,58 @@ function answer(q){
     if (ok && sc > gcov){ gcov = sc; group = p.grp; } }
   if (group){ const g = IDX.P.filter(x => x.grp === group); if (g.length <= 12) group = g; else group = null; }
   if (group && out[0] && out[0].s > 0 && !group.includes(out[0].p)){ const gbest = res.find(r => group.includes(r.p)); if (!gbest || gbest.s < out[0].s * 0.35 && gcov < 0.85) group = null; }
-  return {top: out, qt, tool, group, best: out[0] ? out[0].s : 0};
+  return {top: out, all: res.slice(0, 40), qt, tool, group, best: out[0] ? out[0].s : 0};
 }
 function hl(txt, qt){
   let h = esc(txt);
   qt.filter(w=>w.length>=3).sort((a,b)=>b.length-a.length).forEach(w => { h = h.replace(new RegExp('(?<![\\w>])('+w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'[a-z]*)','gi'), '<mark>$1</mark>'); });
   return h;
+}
+/* ---------- Mode AI (lewat server perantara Cloudflare Worker) ---------- */
+// Alamat Worker Cloudflare. Kosong = chatbot memakai mode pencarian offline saja.
+const AI_URL = '';
+function plainText(html){
+  const s = String(html).replace(/<br\s*\/?>/gi,'\n').replace(/<\/t[dh]>/gi,' | ').replace(/<\/(li|tr|p|h2|h3|div|ol|ul|table)>/gi,'$&\n').replace(/<li[^>]*>/gi,'• ');
+  const d = document.createElement('div'); d.innerHTML = s;
+  return d.textContent.split('\n').map(x => x.replace(/[ \t]+/g,' ').replace(/\s*\|\s*$/,'').trim()).filter(Boolean).join('\n');
+}
+function aiSources(q){
+  const r = answer(q); const src = []; const seen = new Set();
+  const add = (p) => { const key = p.k+':'+p.ci; if (p.k === 'angka' || seen.has(key) || src.length >= 5) return; seen.add(key);
+    src.push({label: `${BOOKS[p.k].name} · ${p.it.ref} — ${p.it.title}`, text: (p.it.title+'\n'+plainText(p.it.html)).slice(0, 3000), href: `#bab/${p.k}/${p.ci}`, k: p.k, title: p.it.title, ref: p.it.ref}); };
+  if (r){ if (r.group) add(r.group[0]); r.all.forEach(x => add(x.p));
+    const facts = r.all.filter(x => x.p.k === 'angka').slice(0, 5).map(x => x.p.txt);
+    if (facts.length) src.push({label: 'Angka Penting (ringkasan Pedoman & TKO)', text: facts.join('\n'), href: '#angka', k: 'angka', title: 'Angka Penting', ref: 'Ringkasan'}); }
+  return {r, src};
+}
+function mdLite(s, src){
+  const lines = esc(s).split('\n'); let html = '', inList = false;
+  const inline = x => x.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\[(S\d+(?:\s*,\s*S\d+)*)\]/g, (m, ids) => ids.split(/\s*,\s*/).map(id => { const i = +id.slice(1)-1; return src[i] ? `<sup><a href="${src[i].href}">${id}</a></sup>` : ''; }).join(''));
+  for (const raw of lines){ const l = raw.trim();
+    if (/^[-•*]\s+/.test(l)){ if (!inList){ html += '<ul>'; inList = true; } html += '<li>'+inline(l.replace(/^[-•*]\s+/,''))+'</li>'; continue; }
+    if (inList){ html += '</ul>'; inList = false; }
+    if (l) html += '<p>'+inline(l.replace(/^#+\s*/,''))+'</p>'; }
+  if (inList) html += '</ul>';
+  return html;
+}
+async function aiAnswer(q, prev){
+  const {r, src} = aiSources(q);
+  const ctrl = new AbortController(); const timer = setTimeout(() => ctrl.abort(), 30000);
+  let res, d;
+  try {
+    res = await fetch(AI_URL, {method:'POST', headers:{'Content-Type':'application/json'}, signal: ctrl.signal,
+      body: JSON.stringify({q, sources: src.map(s => ({label: s.label, text: s.text})), prev})});
+    d = await res.json().catch(() => ({}));
+  } catch(e){ throw new Error(e.name === 'AbortError' ? 'waktu tunggu habis' : 'tidak bisa terhubung'); }
+  finally { clearTimeout(timer); }
+  if (!res.ok || !d.answer) throw new Error(d.error || ('error '+res.status));
+  const cited = new Set([...d.answer.matchAll(/S(\d+)/g)].map(m => +m[1]-1));
+  const list = src.map((s,i) => ({s,i})).filter(x => cited.has(x.i));
+  let html = `<div class="cai">✨ Jawaban AI</div><div class="cans cmd">${mdLite(d.answer, src)}</div>`;
+  if (list.length) html += `<div class="csl">${list.map(x => `<a href="${x.s.href}"><i>S${x.i+1}</i><span style="color:${x.s.k==='angka'?'var(--red)':BOOKS[x.s.k].col}">${x.s.k==='angka'?'Angka Penting':BOOKS[x.s.k].short}</span> · ${esc(x.s.ref)} — ${esc(x.s.title)} ›</a>`).join('')}</div>`;
+  const tool = r && r.tool; if (tool) html += `<a class="ctool" href="#alat/${tool[1]}">🧮 ${tool[2]}</a>`;
+  html += `<div class="cnote">Disusun AI dari kutipan Pedoman/TKO. Periksa sumbernya sebelum mengambil keputusan.</div>`;
+  return {html, text: d.answer};
 }
 const CHAT_KEY = 'saku.chat';
 const SUGG = ['Berapa jaminan sanggahan?','Kapan SKT dibekukan?','Siapa yang menilai kinerja saat kontrak berjalan?','Berapa poin kalau pemenang mundur?','Kapan HPS tidak wajib?','Syarat repeat order apa saja?','Berapa lama sanksi Merah?','Batas waktu sanggah penetapan pemenang?'];
@@ -634,9 +689,8 @@ function chatView(){
     if (m.u) return `<div class="msg u"><div>${esc(m.u)}</div></div>`;
     return `<div class="msg b"><div>${m.b}</div></div>`;
   };
-  const render = () => { box.innerHTML = `<div class="msg b"><div><b>Halo! Saya Tanya Saku.</b><br>Ketik pertanyaan tentang Pedoman Pengadaan atau TKO (Pemilihan, Registrasi, Penilaian Kinerja). Saya akan mencarikan bagian yang paling relevan beserta sumbernya.<div class="cnote">Jawaban berupa kutipan ringkasan buku saku, bukan pendapat. Selalu cek dokumen asli untuk keputusan.</div></div></div>` + hist.map(bubble).join(''); box.lastElementChild.scrollIntoView({block:'end'}); };
-  const ask = (q) => {
-    q = q.trim(); if (!q) return;
+  const render = () => { box.innerHTML = `<div class="msg b"><div><b>Halo! Saya Tanya Saku.</b><br>Ketik pertanyaan tentang Pedoman Pengadaan atau TKO (Pemilihan, Registrasi, Penilaian Kinerja). ${AI_URL ? 'Jawaban disusun AI <b>hanya dari isi Pedoman &amp; TKO</b>, lengkap dengan sumbernya. Saat offline, saya beralih ke mode pencarian.' : 'Saya akan mencarikan bagian yang paling relevan beserta sumbernya.'}<div class="cnote">Selalu cek dokumen asli sebelum mengambil keputusan.</div></div></div>` + hist.map(bubble).join(''); box.lastElementChild.scrollIntoView({block:'end'}); };
+  const offline = (q) => {
     const r = answer(q); let html;
     if (!r || !r.top.length || r.best < 2.2){
       html = `Maaf, saya belum menemukan jawaban yang pas untuk itu.<ul class="ctips"><li>Coba kata kunci yang ada di dokumen, mis. <i>jaminan pelaksanaan</i>, <i>SKT</i>, <i>sanggahan</i>.</li><li>Atau cari manual: <a href="#cari/${encodeURIComponent(q)}">buka pencarian</a>.</li></ul>`;
@@ -649,6 +703,22 @@ function chatView(){
       if (rel.length) html += `<div class="crel"><b>Terkait</b>${rel.map(x=>`<div class="ci">${hl(x.p.txt.length>220?x.p.txt.slice(0,220)+'…':x.p.txt, r.qt)}${src(x)}</div>`).join('')}</div>`;
       if (r.tool) html += `<a class="ctool" href="#alat/${r.tool[1]}">🧮 ${r.tool[2]}</a>`;
     }
+    return html;
+  };
+  let busy = false;
+  const ask = async (q) => {
+    q = q.trim(); if (!q || busy) return;
+    if (AI_URL && navigator.onLine !== false){
+      busy = true;
+      const lastU = [...hist].reverse().find(m => m.u), lastB = [...hist].reverse().find(m => m.b);
+      const prev = lastU && lastB ? {q: lastU.u, a: (lastB.t || plainText(lastB.b)).slice(0, 600)} : null;
+      hist.push({u:q}); hist.push({b:'<span class="ctyping">Menyusun jawaban</span>', pending:1}); render();
+      let item;
+      try { const a = await aiAnswer(q, prev); item = {b: a.html, t: a.text}; }
+      catch(e){ item = {b: offline(q) + `<div class="cnote">⚠️ Mode AI tidak tersedia (${esc(e.message)}), jadi ini hasil mode pencarian.</div>`}; }
+      hist = hist.filter(m => !m.pending); hist.push(item); hist = hist.slice(-30); store.set(CHAT_KEY, hist); busy = false; render(); return;
+    }
+    const html = offline(q);
     hist.push({u:q}); hist.push({b:html}); hist = hist.slice(-30); store.set(CHAT_KEY, hist); render();
   };
   $('#cf').onsubmit = e => { e.preventDefault(); const v = $('#cq').value; $('#cq').value = ''; ask(v); };
