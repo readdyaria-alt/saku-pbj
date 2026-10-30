@@ -179,6 +179,46 @@ input[type=range]{width:100%}
 .angka div{background:#fff;border-radius:12px;padding:12px;border-left:4px solid var(--ac,var(--blue));box-shadow:0 1px 2px rgba(14,42,71,.06)}
 .angka b{display:block;font-size:17px;color:var(--navy);line-height:1.2}
 .angka span{font-size:12px;color:var(--muted)}
+
+.lvls{display:flex;flex-direction:column;gap:8px}
+.lvl{display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:left;border:1.5px solid var(--line);border-left:6px solid var(--lc);border-radius:10px;background:#fff;padding:11px 12px;cursor:pointer}
+.lvl b{font-size:14.5px;color:var(--navy)}
+.lvl span{font-size:13px;color:var(--muted);font-weight:700}
+.lvl.on{border-color:var(--lc);background:color-mix(in srgb,var(--lc) 12%,#fff);box-shadow:0 0 0 1px var(--lc)}
+.dg h3{display:flex;gap:8px;align-items:baseline;font-size:18px;color:var(--navy);margin:22px 2px 10px}
+.dg h3 small{font-size:12px;font-weight:800;color:var(--hc,var(--red))}
+.dg .legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted);margin:0 2px 10px}
+.dg .legend span{display:flex;align-items:center;gap:6px}
+.dg .legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.tl{background:#fff;border-radius:14px;padding:14px 14px 2px;box-shadow:0 1px 2px rgba(14,42,71,.06)}
+.tl .s{display:grid;grid-template-columns:32px 1fr;gap:12px}
+.tl .s .rail{display:flex;flex-direction:column;align-items:center}
+.tl .s .rail b{flex:none;width:30px;height:30px;border-radius:50%;border:1.5px solid var(--sc);background:var(--sb);color:var(--sc);font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.tl .s .rail i{flex:1;width:2px;min-height:10px;background:linear-gradient(180deg,var(--sc),var(--nc))}
+.tl .s:last-child .rail i{opacity:0}
+.tl .s .bd{padding:4px 0 14px}
+.tl .s .bd .w{display:block;font-size:11.5px;font-weight:800;color:var(--sc)}
+.tl .s .bd .tt{display:block;font-size:14.5px;font-weight:700;color:var(--navy)}
+.tl .s .bd .d{display:block;font-size:13px;color:var(--muted);line-height:1.45}
+.mflow{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+.mflow .mb{border:1.5px solid var(--mc);background:color-mix(in srgb,var(--mc) 10%,#fff);border-radius:10px;padding:10px 12px;font-size:14px}
+.mflow .ar{font-size:12px;color:var(--muted);padding-left:12px}
+.mgrid{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:560px){.mgrid{grid-template-columns:1fr 1fr}}
+.mcard{background:#fff;border-radius:12px;padding:14px;border-top:4px solid var(--mc);box-shadow:0 1px 2px rgba(14,42,71,.06)}
+.mcard>b{display:block;font-size:15.5px;color:var(--navy)}
+.mcard>small{display:block;font-size:12px;font-weight:700;color:var(--mc);margin-bottom:6px}
+.mcard .sub{margin-top:8px}
+.mcard .sub b{display:block;font-size:13.5px;color:var(--mc)}
+.mcard .sub span{display:block;font-size:13px;color:var(--muted);line-height:1.45}
+.mcard ul{list-style:none;margin-top:4px}
+.mcard li{font-size:13px;color:var(--ink);line-height:1.45;margin-bottom:4px;padding-left:12px;position:relative}
+.mcard li::before{content:"·";position:absolute;left:2px;font-weight:800}
+.ph{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(14,42,71,.06);margin-bottom:10px}
+.ph .phh{padding:10px 14px;background:var(--pb);display:flex;gap:10px;align-items:baseline}
+.ph .phh b{color:var(--pc);font-size:13px}
+.ph .phh span{font-weight:700;color:var(--navy);font-size:14.5px}
+.ph .tl{box-shadow:none;border-radius:0}
 @media (max-width:380px){.ct .grid3{grid-template-columns:1fr}.ct .term{grid-template-columns:90px 1fr}}
 </style>
 </head>
@@ -236,6 +276,7 @@ function home(){
   </div>
   <form class="search" id="hs"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5b6775" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="hq" placeholder="Cari: HPS, sanggahan, konsorsium…" enterkeyhint="search"></form>
   <div class="tiles">
+    <a class="tile" href="#diagram" style="--tc:var(--green);grid-column:1/-1"><b>Diagram Proses Pengadaan</b><span>Alur umum, metode, 29 tahap Tender Terbatas, varian &amp; swakelola</span></a>
     <a class="tile" href="#alur" style="--tc:var(--red)"><b>Alur Tender Terbatas</b><span>15 langkah + keputusan</span></a>
     <a class="tile" href="#cek" style="--tc:var(--green)"><b>Checklist FPP</b><span>Pantau per paket</span></a>
     <a class="tile" href="#alat" style="--tc:var(--blue)"><b>Kalkulator</b><span>Golongan, jaminan, tenggat</span></a>
@@ -341,6 +382,69 @@ function search(q){
   };
   inp.oninput = run; $('#ss').onsubmit = e => { e.preventDefault(); inp.blur(); };
   if (q) run();
+}
+
+
+/* ---------- diagram proses (dari file Diagram proses pengadaan barang jasa) ---------- */
+function diagram(){
+  setTitle('Diagram Proses Pengadaan', true);
+  const K = { r:{c:'#E31E24',bg:'rgba(227,30,36,.10)'}, b:{c:'#005DAA',bg:'rgba(0,93,170,.10)'}, g:{c:'#4f8f22',bg:'rgba(108,179,63,.14)'}, n:{c:'#6b7280',bg:'rgba(107,114,128,.12)'} };
+  const A = { fpp:['r','FPP'], pg:['b','Fungsi Procurement'], pj:['g','Pejabat Berwenang FPP'], ps:['n','Peserta Pemilihan'], mix:['b','Procurement + FPP'], all:['b','Procurement + FPP + Fungsi Terkait'] };
+  const tl = (list) => '<div class="tl">' + list.map((s,i) => { const k = K[s.k], nk = K[(list[i+1]||s).k]; return `<div class="s" style="--sc:${k.c};--sb:${k.bg};--nc:${nk.c}"><div class="rail"><b>${s.n}</b><i></i></div><div class="bd">${s.w?`<span class="w">${esc(s.w)}</span>`:''}${s.t?`<span class="tt">${esc(s.t)}</span>`:''}${s.d?`<span class="d">${esc(s.d)}</span>`:''}</div></div>`; }).join('') + '</div>';
+  const overall = [
+    ['r','01','Kebutuhan','FPP','Procurement Plan List, DP3 (lingkup kerja, spesifikasi, HPS/OE).'],
+    ['r','02','Pilih metode','Procurement + FPP','Sinergi PI, Tender, e-Purchasing, Pengadaan Langsung atau Swakelola.'],
+    ['b','03','Pemilihan Penyedia','Procurement','Kualifikasi, penawaran, evaluasi, negosiasi, penetapan pemenang.'],
+    ['b','04','Kontrak','Procurement','Jaminan, jenis kontrak, penyusunan, PO, distribusi.'],
+    ['g','05','Manajemen kontrak','FPP','Pelaksanaan, amandemen, penyelesaian perselisihan.'],
+    ['g','06','Penutupan & penilaian','FPP + Procurement','Penutupan kontrak; pembinaan dan penilaian kinerja penyedia.']
+  ].map(([k,n,t,w,d]) => ({k,n,t,w,d}));
+  const methods = [
+    ['r','Sinergi PI','Procurement / FPP',[['Penunjukan','Barang/jasa adalah produk Anak Perusahaan/Terafiliasi; sesuai bidang usaha. Lebih dari satu: justifikasi FPP + persetujuan Pejabat Berwenang.'],['Penugasan','Kebutuhan FPP atau instruksi Direksi; kajian teknis & keekonomian, disetujui Direktur terkait. Kontrak umumnya cost plus fee.']]],
+    ['b','Tender','Procurement',[['Tender Terbatas','Hanya DPT yang memenuhi kualifikasi umum.'],['Tender Terbuka','Konstruksi ≥ Rp100 M, atau Tender Terbatas ≥ Rp50 M yang gagal 1 kali. DPT & non-DPT.'],['Penunjukan Langsung','≤ Rp50 juta (DPT sekitar lokasi), atau kondisi khusus dengan justifikasi FPP: sole source, darurat, HAKI/OEM, repeat order, dll.']]],
+    ['g','e-Purchasing','Procurement / FPP*',[['e-Catalog','Bandingkan harga antar Pelaksana Kontrak e-Catalog untuk spesifikasi FPP.'],['OA Catalog','Daftar barang/jasa dalam Kontrak Payung (Outline Agreement).']]],
+    ['r','Pengadaan Langsung','Procurement / FPP',[['Buyer Purchase','Oleh Procurement; ≤ Rp50 juta per paket via Cash Card / Procurement Card / tagihan.'],['User Purchase','Oleh FPP; spesifikasi & harga published, atau jasa event organizer. Bayar via UMK / invoice.']]],
+    ['b','Swakelola','FPP',[['Dilaksanakan sendiri','Perencanaan, penyelenggaraan, pengawasan oleh FPP.'],['Oleh pihak lain','Pelaksana Kontrak Swakelola adalah Non-Pelaku Usaha.']]]
+  ];
+  const raw = [
+    ['A','Perencanaan & permintaan','r',[['fpp','Berdasarkan Procurement Plan List, FPP menyiapkan DP3.'],['pg','Review kelengkapan DP3; FPP melengkapi kekurangan.'],['all','Rapat pra-Tender: finalisasi syarat, Dokumen Pemilihan, jadwal.']]],
+    ['B','Undangan & kualifikasi','b',[['pg','Mengundang seluruh DPT yang sesuai golongan usaha, bidang usaha & CSMS (jika dipersyaratkan) melalui SAPP; tanpa pengumuman terbuka.'],['pg','Menyampaikan Dokumen Penilaian Kualifikasi khusus (tanpa kualifikasi umum).'],['pg','Rapat penjelasan kualifikasi bila diperlukan.'],['ps','DPT undangan menyampaikan dokumen kualifikasi khusus.'],['mix','Procurement + FPP menilai kualifikasi khusus; penilaian kualifikasi umum tidak dilakukan.'],['pg','Umumkan hasil kualifikasi; kirim Dokumen Tender (unduh via SAPP) ke yang lulus.']]],
+    ['C','Penjelasan & penawaran','g',[['pg','Penjelasan Dokumen Tender + tinjauan lapangan; Berita Acara Penjelasan & amandemen.'],['ps','Peserta menyampaikan dokumen penawaran sesuai batas waktu.'],['all','Pembukaan penawaran (1 sampul / Sampul I); Berita Acara Pembukaan.']]],
+    ['D','Evaluasi','r',[['all','Evaluasi penawaran administrasi.'],['fpp','Evaluasi teknis (+ HSSE Plan); klarifikasi bila perlu, dengan Berita Acara.'],['pg','Umumkan hasil evaluasi teknis.'],['ps','Sanggahan hasil teknis, maks. 1 hari kerja.'],['pg','Tanggapi sanggahan (jika ada).'],['mix','Buka penawaran komersial; Evaluasi Komersial & Berita Acara.']]],
+    ['E','Negosiasi & penetapan','b',[['mix','Klarifikasi & negosiasi harga; BA Negosiasi / BA Harga Timpang.'],['pg','Berita Acara Hasil Pemilihan Penyedia.'],['pg','Usulan Penetapan Pemenang dalam Laporan Hasil Pemilihan (LHP).'],['pj','Menyetujui / tidak menyetujui usulan di LHP.'],['pg','Umumkan calon pemenang; jawab sanggahan (jika ada).'],['pg','Penunjukan Pelaksana Pekerjaan bila tidak ada sanggahan / sanggahan tidak benar.']]],
+    ['F','Kontrak & penutupan','g',[['pg','Finalisasi Kontrak; minta penerbitan Purchase Order (PO).'],['pg','Distribusi Kontrak ke Fungsi Terkait.'],['pg','Penilaian kinerja selama proses Pemilihan.'],['pg','Administrasi dokumen, asli penawaran & Kontrak.'],['pg','Finalisasi Amandemen yang diajukan FPP (jika ada).']]]
+  ];
+  let n = 0;
+  const phases = raw.map(([k,name,pk,ss]) => `<div class="ph" style="--pb:${K[pk].bg};--pc:${K[pk].c}"><div class="phh"><b>${k}</b><span>${esc(name)}</span></div>` + tl(ss.map(([w,t]) => ({k:A[w][0], n:String(++n).padStart(2,'0'), w:A[w][1], d:t}))) + '</div>').join('');
+  const variants = [
+    ['b','Tender Terbatas','Sama dengan Tender Terbuka, kecuali:',['Hanya mengundang DPT yang memenuhi golongan usaha, bidang usaha, CSMS, via SAPP.','Tanpa penilaian kualifikasi umum.']],
+    ['r','Penunjukan Langsung','Sama dengan Tender Terbuka, kecuali:',['Tanpa pengumuman; menunjuk 1 DPT sesuai kualifikasi via SAPP.','Calon belum DPT: Registrasi dahulu.','Tanpa masa sanggah.']],
+    ['g','Buyer Purchase','≤ Rp50 juta per paket',['Cash Card: pembelian tunai/cara lain tanpa Kontrak.','Procurement Card: diterbitkan Bank BUMN/BUMD, dipakai pekerja Procurement berwenang.']],
+    ['r','User Purchase','Dilakukan FPP',['Spesifikasi umum & harga published, atau event organizer.','Nilai sesuai otorisasi UMK / Pejabat Berwenang.','Bayar via UMK atau invoice penyedia.']]
+  ];
+  const sw = arr => tl(arr.map(([t,w,d],i) => ({k:A[w][0], n:String(i+1), t, w:A[w][1], d})));
+  const legend = [['r','FPP'],['b','Fungsi Procurement (juga bersama FPP)'],['g','Pejabat Berwenang FPP'],['n','Peserta / Penyedia']];
+  app.innerHTML = `<div class="dg">
+  <div class="card" style="margin-bottom:6px"><div style="font-size:11.5px;font-weight:800;letter-spacing:.1em;color:var(--muted)">PEDOMAN A-002/B24000/2023-S9 · TKO B-008/B24000/2023-S9</div>
+  <h2 style="color:var(--navy);font-size:21px;margin:4px 0">Proses Pengadaan Barang/Jasa</h2>
+  <p class="muted">Dari kebutuhan FPP sampai penutupan kontrak. Bab V Pedoman menentukan metode; tahapan pemilihan mengacu TKO Pelaksanaan Pemilihan Penyedia.</p></div>
+  <div class="legend">${legend.map(([k,t])=>`<span><i style="background:${K[k].c}"></i>${t}</span>`).join('')}</div>
+  <h3><small>01</small>Alur umum</h3>${tl(overall)}
+  <h3 style="--hc:var(--blue)"><small>02</small>Penentuan metode pemenuhan (Bab V.A)</h3>
+  <div class="mflow"><div class="mb" style="--mc:#E31E24">Kebutuhan Barang/Jasa dari FPP</div><div class="ar">↓</div>
+  <div class="mb" style="--mc:#005DAA">Bisa lewat <b>Sinergi Pertamina Incorporated</b>? <span class="muted">(diutamakan)</span></div><div class="ar">↓ Tidak</div>
+  <div class="mb" style="--mc:#4f8f22">Fungsi Procurement + FPP (+ Fungsi Terkait) menentukan strategi &amp; metode</div></div>
+  <div class="mgrid">${methods.map(([k,name,pel,subs])=>`<div class="mcard" style="--mc:${K[k].c}"><b>${name}</b><small>${pel}</small>${subs.map(s=>`<div class="sub"><b>${esc(s[0])}</b><span>${esc(s[1])}</span></div>`).join('')}</div>`).join('')}</div>
+  <p class="src">*e-Purchasing dilaksanakan FPP bila FPP sudah dapat bertransaksi di Sistem Catalog.</p>
+  <h3 style="--hc:var(--green)"><small>03</small>Tahapan Tender Terbatas (TKO VII.D)</h3>${phases}
+  <h3><small>04</small>Varian metode terhadap Tender Terbuka</h3>
+  <div class="mgrid">${variants.map(([k,name,cond,pts])=>`<div class="mcard" style="--mc:${K[k].c};border-top:0;border-left:4px solid ${K[k].c}"><b>${name}</b><small>${cond}</small><ul>${pts.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`).join('')}</div>
+  <h3 style="--hc:var(--blue)"><small>05</small>Swakelola (TKO VII.H)</h3>
+  <p style="font-weight:700;color:var(--navy);margin:0 2px 6px">Dilaksanakan sendiri oleh FPP <span class="muted" style="font-weight:400">· perencanaan, pelaksanaan, pengawasan oleh FPP</span></p>
+  ${sw([['Rencana','fpp','Kegiatan, jadwal, RAB'],['Penetapan','pj','Mengesahkan rencana'],['Pelaksanaan','fpp','Lapor kemajuan berkala'],['Pertanggungjawaban','fpp','Rincian biaya ke Fungsi Keuangan; hasil dipakai FPP']])}
+  <p style="font-weight:700;color:var(--navy);margin:14px 2px 6px">Dilaksanakan oleh Pelaksana Kontrak Swakelola <span class="muted" style="font-weight:400">· pelaksana adalah Non-Pelaku Usaha</span></p>
+  ${sw([['Lingkup','fpp','Sasaran, jadwal, HPS/OE'],['Pilih & undang','pj','Calon pelaksana, bisa via sayembara'],['Proposal & negosiasi','ps','Calon kirim proposal; FPP evaluasi, klarifikasi, negosiasi'],['Kontrak','pj','Penunjukan langsung, tanda tangan'],['Pelaksanaan','ps','Laporan bulanan; FPP mengawasi'],['Serah terima','fpp','BAST dari pelaksana; bayar UMK / invoice']])}
+  <p class="src">Sumber: Pedoman Pengadaan Barang/Jasa 2023 (Bab V–IX) dan TKO Pelaksanaan Pemilihan Penyedia Barang/Jasa. Langkah kontrak (Bab VII–VIII) dan pengelolaan penyedia (Bab IX) diringkas dari daftar isi pedoman.</p></div>`;
 }
 
 /* ---------- checklist ---------- */
@@ -450,7 +554,7 @@ function confirmBox(m){ try { return window.confirm(m); } catch(e){ return true;
 const TOOLS = [
   ['nilai','Cek aturan per nilai','Aturan yang berlaku untuk nilai & jenis pengadaan','var(--red)'],
   ['golongan','Golongan usaha','Golongan penyedia tunggal sesuai nilai & bidang','var(--green)'],
-  ['jaminan','Jaminan pelaksanaan','Matriks risiko → persentase & nilai jaminan','var(--navy)'],
+  ['jaminan','Jaminan pelaksanaan','Tingkat risiko → persentase & nilai jaminan','var(--navy)'],
   ['uangmuka','Uang muka & jaminan lain','Batas uang muka, jaminan sanggahan, pemeliharaan','var(--blue)'],
   ['hps','Penawaran vs HPS/OE','Kewajaran harga, negosiasi, harga timpang','var(--red)'],
   ['skor','Nilai akhir scoring','Kombinasi teknis & harga','var(--green)'],
@@ -471,8 +575,14 @@ function tool(k){
   golongan: `<label class="f">Bidang usaha</label><select class="in" id="j"><option value="P">Barang (P)</option><option value="Q1">Konstruksi pelaksana (Q)</option><option value="Q2">Konsultansi konstruksi (Q)</option><option value="R">Jasa lainnya (R)</option><option value="S">Konsultansi non-konstruksi (S)</option></select>
     <label class="f">Nilai pengadaan (Rp, tanpa PPN)</label><input class="in" id="v" inputmode="numeric" placeholder="0"><div id="o"></div>`,
   jaminan: `<label class="f">Nilai kontrak (Rp)</label><input class="in" id="v" inputmode="numeric" placeholder="0">
-    <div class="row2"><div><label class="f">Probabilitas</label><select class="in" id="p"><option value="1">1 · Hampir tidak mungkin</option><option value="2">2 · Jarang</option><option value="3">3 · Bisa terjadi</option><option value="4">4 · Sangat mungkin</option><option value="5">5 · Hampir pasti</option></select></div>
-    <div><label class="f">Dampak</label><select class="in" id="d"><option value="1">1 · Sangat kecil</option><option value="2">2 · Kecil</option><option value="3">3 · Sedang</option><option value="4">4 · Besar</option><option value="5">5 · Sangat besar</option></select></div></div><div id="o"></div>`,
+    <label class="f">Tingkat risiko hasil risk assessment</label>
+    <div class="lvls" id="lv">
+      <button type="button" class="lvl" data-p="0" style="--lc:#7DB73D"><b>Low</b><span>Tidak perlu jaminan</span></button>
+      <button type="button" class="lvl" data-p="5" style="--lc:#b7bd2c"><b>Low to Moderate</b><span>5%</span></button>
+      <button type="button" class="lvl on" data-p="10" style="--lc:#f2a33a"><b>Moderate (Medium)</b><span>10%</span></button>
+      <button type="button" class="lvl" data-p="15" style="--lc:#ec6b2d"><b>Moderate to High</b><span>15%</span></button>
+      <button type="button" class="lvl" data-p="20" style="--lc:#E31E24"><b>High</b><span>20%</span></button>
+    </div><div id="o"></div>`,
   uangmuka: `<label class="f">Nilai kontrak (Rp)</label><input class="in" id="v" inputmode="numeric" placeholder="0">
     <label class="f">Jenis penyedia</label><select class="in" id="j"><option value="20">Anak Perusahaan / Afiliasi Pertamina</option><option value="15">Non-afiliasi, golongan usaha kecil</option><option value="10">Non-afiliasi, golongan menengah/besar</option><option value="10k">Non-afiliasi, jasa konsultansi</option></select>
     <label class="f">Harga penawaran penyanggah (Rp) — untuk jaminan sanggahan</label><input class="in" id="s" inputmode="numeric" placeholder="opsional"><div id="o"></div>`,
@@ -506,11 +616,8 @@ function tool(k){
       const T = {P:[5e7,5e8,5e9],Q1:[1e8,1e9,1e10],Q2:[2e8,5e8,2e9],R:[2e8,5e8,5e9]}[j];
       const G = []; if (v <= T[0]) G.push('Perseorangan'); if (v <= T[1]) G.push('Kecil (K)'); else if (v <= T[2]) G.push('Menengah (M)'); else G.push('Besar (B)');
       o.innerHTML = R('ok','Golongan penyedia tunggal', G.join(' / '), ['Batas: Perseorangan ≤ '+fmt(T[0])+', Kecil ≤ '+fmt(T[1])+', Menengah ≤ '+fmt(T[2])+', Besar > '+fmt(T[2])+'.','Konsorsium: lead firm memenuhi golongan ini; anggota tidak melebihinya.','Pengecualian: Anak Perusahaan/Afiliasi lewat Penunjukan, penyedia asing, pabrikan/agen &amp; distributor tunggal, konsultan non-konstruksi.'],'Nilai tidak termasuk PPN. Sumber: TKO III.C.3 (6)a'); },
-    jaminan(){ const v = num(g('v').value), s = +g('p').value * +g('d').value;
-      let lv, pct;
-      if (s<=3){lv='Low';pct=0} else if (s===4){lv='Low to Moderate';pct=5} else if (s<=9){lv='Moderate';pct=10} else if (s<=12){lv='Moderate to High';pct=15} else if (s<=20){lv='High';pct=20} else {lv=null;pct=null}
-      if (pct===null){ o.innerHTML = R('bad','Skor risiko '+s, 'Tidak tercantum', ['Tabel Pedoman hanya mengatur skor 1–20. Konsultasikan besaran jaminan dengan Fungsi Manajemen Risiko.'],'Sumber: Pedoman VI.D.2'); return; }
-      o.innerHTML = R(pct?'warn':'ok','Skor '+s+' · '+lv, pct?pct+'% '+(v?'= '+fmt(v*pct/100):'dari nilai kontrak'):'Tidak diperlukan', ['Berlaku untuk nilai &gt; Rp1 M (kecuali Sinergi, PL sole source, konsultansi non-konstruksi).','Penawaran ≤ 80% HPS/OE: besaran bisa disesuaikan lewat risk assessment ulang; dalam negosiasi bisa dinaikkan s.d. 20% dari penawaran.','Diserahkan sebelum tanda tangan kontrak/SP3MK.'],'Sumber: Pedoman VI.D; TKO III.C.24'); },
+    jaminan(){ const v = num(g('v').value); const sel = app.querySelector('.lvl.on'); const pct = +sel.dataset.p; const lv = sel.querySelector('b').textContent;
+      o.innerHTML = R(pct?'warn':'ok','Tingkat risiko · '+lv, pct?pct+'% '+(v?'= '+fmt(v*pct/100):'dari nilai kontrak'):'Tidak diperlukan', ['Berlaku untuk nilai &gt; Rp1 M (kecuali Sinergi, PL sole source, konsultansi non-konstruksi).','Tingkat risiko ditetapkan FPP lewat risk assessment (bisa meminta masukan Fungsi Manajemen Risiko).','Penawaran ≤ 80% HPS/OE: besaran bisa disesuaikan lewat risk assessment ulang; dalam negosiasi bisa dinaikkan s.d. 20% dari penawaran.','Diserahkan sebelum tanda tangan kontrak/SP3MK.'],'Sumber: Pedoman VI.D; TKO III.C.24'); },
     uangmuka(){ const v = num(g('v').value), j = g('j').value, sg = num(g('s').value); const pct = parseInt(j,10); const L=[];
       L.push('Wajib jaminan uang muka senilai uang muka (kecuali Sinergi Pertamina Incorporated).');
       L.push('Uang muka lunas paling lambat saat prestasi 100%.');
@@ -533,17 +640,19 @@ function tool(k){
   };
   if (k==='tenggat'){ const t=g('t'); t.value = new Date().toISOString().slice(0,10); }
   app.querySelectorAll('input,select').forEach(el => el.addEventListener('input', calc[k]));
+  app.querySelectorAll('.lvl').forEach(bt => bt.onclick = () => { app.querySelectorAll('.lvl').forEach(x=>x.classList.remove('on')); bt.classList.add('on'); calc[k](); });
   calc[k]();
 }
 
 /* ---------- router ---------- */
 function route(){
   const h = decodeURIComponent(location.hash.slice(1) || 'home'); const [a,b,c] = h.split('/');
-  const tab = {home:'home',pedoman:'pedoman',tko:'tko',bab:b,cek:'cek',alat:'alat',alur:'home',angka:'home',cari:'home'}[a] || 'home';
+  const tab = {home:'home',pedoman:'pedoman',tko:'tko',bab:b,cek:'cek',alat:'alat',alur:'home',diagram:'home',angka:'home',cari:'home'}[a] || 'home';
   document.querySelectorAll('#tabs a').forEach(x => x.classList.toggle('on', x.dataset.t === tab));
   if (a==='pedoman'||a==='tko') bookList(a);
   else if (a==='bab') chapter(b, +c);
   else if (a==='alur') flow();
+  else if (a==='diagram') diagram();
   else if (a==='angka') angka();
   else if (a==='cari') search(h.slice(5));
   else if (a==='cek') b==='baru' ? cekNew() : b ? cekDetail(b) : cekList();
