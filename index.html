@@ -633,7 +633,7 @@ function hl(txt, qt){
 }
 /* ---------- Mode AI (lewat server perantara Cloudflare Worker) ---------- */
 // Alamat Worker Cloudflare. Kosong = chatbot memakai mode pencarian offline saja.
-const AI_URL = '';
+const AI_URL = 'https://saku-pbj-ai.readdy-aria.workers.dev/';
 function plainText(html){
   const s = String(html).replace(/<br\s*\/?>/gi,'\n').replace(/<\/t[dh]>/gi,' | ').replace(/<\/(li|tr|p|h2|h3|div|ol|ul|table)>/gi,'$&\n').replace(/<li[^>]*>/gi,'• ');
   const d = document.createElement('div'); d.innerHTML = s;
