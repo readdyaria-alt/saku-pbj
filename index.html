@@ -9,10 +9,10 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Saku PBJ">
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
-<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest?v=7">
+<link rel="icon" type="image/png" sizes="32x32" href="pam-favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="pam-icon-192.png">
+<link rel="apple-touch-icon" href="pam-apple-touch-icon.png">
 <style>
 :root{
   --red:#E31E24;--blue:#005DAA;--green:#6FA832;--navy:#0E2A47;--amber:#E3A008;
@@ -904,7 +904,11 @@ function setupInstall(){
   if (deferred){ card.classList.add('on'); $('#instBtn').style.display=''; $('#instBtn').onclick = async () => { deferred.prompt(); await deferred.userChoice; deferred = null; card.classList.remove('on'); }; }
   else if (ios){ card.classList.add('on'); $('#instBtn').style.display='none'; $('#instTxt').innerHTML = 'Di iPhone: buka di <b>Safari</b>, tekan tombol <b>Bagikan</b> (kotak dengan panah ke atas), lalu pilih <b>Tambahkan ke Layar Utama</b>.'; }
 }
-if ('serviceWorker' in navigator && location.protocol.startsWith('http')) addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{}));
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  const hadSW = !!navigator.serviceWorker.controller; let reloaded = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => { if (hadSW && !reloaded) { reloaded = true; location.reload(); } });
+  addEventListener('load', () => navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(r => r.update()).catch(()=>{}));
+}
 </script>
 </body>
 </html>
