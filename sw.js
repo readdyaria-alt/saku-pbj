@@ -1,6 +1,6 @@
 // Service worker: menyimpan semua file agar aplikasi bisa dibuka offline.
 // Naikkan VERSION setiap kali isi aplikasi diperbarui.
-const VERSION = 'saku-pbj-v4';
+const VERSION = 'saku-pbj-v5';
 const FILES = [
   './', './index.html', './manifest.webmanifest',
   './logo.png', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'
