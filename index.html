@@ -711,7 +711,7 @@ function chatView(){
   setTitle('Tanya Saku', true);
   app.innerHTML = `<div class="chat" id="chat"></div>
   <div class="chips" id="sg">${SUGG.map(s=>`<button class="cs">${esc(s)}</button>`).join('')}</div>
-`;
+  <form class="cin" id="cf"><input id="cq" placeholder="Tanya seputar Pedoman & TKO…" autocomplete="off" enterkeyhint="send"><button class="btn" aria-label="Kirim">Kirim</button></form>`;
   const box = $('#chat'); let hist = store.get(CHAT_KEY, []);
   const bubble = (m) => {
     if (m.u) return `<div class="msg u"><div>${esc(m.u)}</div></div>`;
@@ -749,6 +749,7 @@ function chatView(){
     const html = offline(q);
     hist.push({u:q}); hist.push({b:html}); hist = hist.slice(-30); store.set(CHAT_KEY, hist); render();
   };
+  $('#cf').onsubmit = e => { e.preventDefault(); const v = $('#cq').value.trim(); $('#cq').value = ''; if (v) ask(v); };
   app.querySelectorAll('.cs').forEach(bt => bt.onclick = () => ask(bt.textContent));
   render();
   const clr = document.createElement('button'); clr.className = 'cclr'; clr.textContent = 'Hapus riwayat'; clr.onclick = () => { hist = []; store.set(CHAT_KEY, hist); render(); }; $('#sg').appendChild(clr);
