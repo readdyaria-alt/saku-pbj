@@ -49,6 +49,7 @@ nav.tabs a.on{color:var(--blue)}
 .hero .sq{position:absolute;border-radius:6px}
 .search{display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:14px}
 .search input{border:0;outline:0;flex:1;background:transparent;font-size:15px}
+.welcome{font-size:1rem;margin:4px 2px 12px;color:var(--ink)}
 .tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
 .tile{background:#fff;border-radius:14px;padding:14px;box-shadow:0 1px 2px rgba(14,42,71,.06);border-left:4px solid var(--tc,var(--blue))}
 .tile b{display:block;font-size:14px;color:var(--navy)}
@@ -342,6 +343,7 @@ function home(){
     <i class="sq" style="right:54px;top:44px;width:16px;height:16px;background:#7DB73D;transform:rotate(-10deg)"></i>
   </div>
   <form class="search" id="hs"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5b6775" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="hq" placeholder="Cari: HPS, sanggahan, konsorsium…" enterkeyhint="search"></form>
+  <div class="welcome">Selamat datang, <b>${esc((readAuth()||{}).nama || '')}</b></div>
   <div class="tiles">
     <a class="tile" href="#diagram" style="--tc:var(--green);grid-column:1/-1"><b>Diagram Proses Pengadaan</b><span>Alur umum, metode, 29 tahap Tender Terbatas, varian &amp; swakelola</span></a>
     <a class="tile" href="#alur" style="--tc:var(--red)"><b>Alur Tender Terbatas</b><span>15 langkah + keputusan</span></a>
