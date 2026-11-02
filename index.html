@@ -319,7 +319,6 @@ function home(){
   </div>
   <form class="search" id="hs"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5b6775" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="hq" placeholder="Cari: HPS, sanggahan, konsorsium…" enterkeyhint="search"></form>
   <div class="tiles">
-    <a class="tile" href="#tanya" style="--tc:var(--red);grid-column:1/-1"><b>💬 Tanya Saku</b><span>Tanya apa saja soal Pedoman &amp; TKO, dijawab dengan kutipan + sumber (offline)</span></a>
     <a class="tile" href="#diagram" style="--tc:var(--green);grid-column:1/-1"><b>Diagram Proses Pengadaan</b><span>Alur umum, metode, 29 tahap Tender Terbatas, varian &amp; swakelola</span></a>
     <a class="tile" href="#alur" style="--tc:var(--red)"><b>Alur Tender Terbatas</b><span>15 langkah + keputusan</span></a>
     <a class="tile" href="#cek" style="--tc:var(--green)"><b>Checklist FPP</b><span>Pantau per paket</span></a>
@@ -683,13 +682,13 @@ function chatView(){
   setTitle('Tanya Saku', true);
   app.innerHTML = `<div class="chat" id="chat"></div>
   <div class="chips" id="sg">${SUGG.map(s=>`<button class="cs">${esc(s)}</button>`).join('')}</div>
-  <form class="cin" id="cf"><input id="cq" placeholder="Tanya seputar Pedoman & TKO…" autocomplete="off" enterkeyhint="send"><button class="btn" aria-label="Kirim">Kirim</button></form>`;
+`;
   const box = $('#chat'); let hist = store.get(CHAT_KEY, []);
   const bubble = (m) => {
     if (m.u) return `<div class="msg u"><div>${esc(m.u)}</div></div>`;
     return `<div class="msg b"><div>${m.b}</div></div>`;
   };
-  const render = () => { box.innerHTML = `<div class="msg b"><div><b>Halo! Saya Tanya Saku.</b><br>Ketik pertanyaan tentang Pedoman Pengadaan atau TKO (Pemilihan, Registrasi, Penilaian Kinerja). ${AI_URL ? 'Jawaban disusun AI <b>hanya dari isi Pedoman &amp; TKO</b>, lengkap dengan sumbernya. Saat offline, saya beralih ke mode pencarian.' : 'Saya akan mencarikan bagian yang paling relevan beserta sumbernya.'}<div class="cnote">Selalu cek dokumen asli sebelum mengambil keputusan.</div></div></div>` + hist.map(bubble).join(''); box.lastElementChild.scrollIntoView({block:'end'}); };
+  const render = () => { box.innerHTML = `<div class="msg b"><div><b>Halo! Saya Tanya Saku.</b><br>Pilih salah satu pertanyaan contoh di bawah, atau ketik pertanyaan tentang Pedoman Pengadaan atau TKO (Pemilihan, Registrasi, Penilaian Kinerja). ${AI_URL ? 'Jawaban disusun AI <b>hanya dari isi Pedoman &amp; TKO</b>, lengkap dengan sumbernya. Saat offline, saya beralih ke mode pencarian.' : 'Saya akan mencarikan bagian yang paling relevan beserta sumbernya.'}<div class="cnote">Selalu cek dokumen asli sebelum mengambil keputusan.</div></div></div>` + hist.map(bubble).join(''); box.lastElementChild.scrollIntoView({block:'end'}); };
   const offline = (q) => {
     const r = answer(q); let html;
     if (!r || !r.top.length || r.best < 2.2){
@@ -721,7 +720,6 @@ function chatView(){
     const html = offline(q);
     hist.push({u:q}); hist.push({b:html}); hist = hist.slice(-30); store.set(CHAT_KEY, hist); render();
   };
-  $('#cf').onsubmit = e => { e.preventDefault(); const v = $('#cq').value; $('#cq').value = ''; ask(v); };
   app.querySelectorAll('.cs').forEach(bt => bt.onclick = () => ask(bt.textContent));
   render();
   const clr = document.createElement('button'); clr.className = 'cclr'; clr.textContent = 'Hapus riwayat'; clr.onclick = () => { hist = []; store.set(CHAT_KEY, hist); render(); }; $('#sg').appendChild(clr);
